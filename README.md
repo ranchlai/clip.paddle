@@ -16,7 +16,12 @@ $ pip install paddlepaddle-gpu
 $ pip install ftfy regex tqdm
 ```
 
-Downlod pretrained weights from [pan.baidu.com]() and put them under the folder [./assets](./assets)
+Download pre-trained weights and put them under the folder [./assets](./assets)
+- [ViT](https://pan.baidu.com/s/1_RRVAmKg1L9_9SitaA0SAA): v6pp
+- [RN101](https://pan.baidu.com/s/1FFzLs_SogVW_OS_LNe_4ZQ): 42mj
+- [RN50](https://pan.baidu.com/s/1IKRkYxfpfolklT1_S_u1rQ): 5qrc
+
+The following example demonstrates zero-shot classification using CLIP.
 
 ``` python
 import numpy as np
