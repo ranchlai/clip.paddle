@@ -1,24 +1,3 @@
-# OpenAI CLIP implemented in [PaddlePaddle](https://github.com/PaddlePaddle/Paddle)
-
-I have ported the CLIP models and inference code to PaddlePaddle and tested for RN101/ViT/RN50 image encoder and the accompanied transformer text encoder, for whomever is interested. (Note: the RN50 text encoder still under testing, and the others are tested to be  nearly the same as pytorch version. )
-
-CLIP (Contrastive Language-Image Pre-Training) is a neural network trained on a variety of (image, text) pairs. Read the original [README](./README.md.orig) here. Also
-[[Blog]](https://openai.com/blog/clip/) [[Paper]](https://arxiv.org/abs/2103.00020) [[Model Card]](model-card.md) are usefully.
-
-## Approach
-
-![CLIP](CLIP.png)
-
-## Usage in PaddlePaddle
-First install PaddlePaddle and other small dependencies,
-``` bash
-$ pip install paddlepaddle-gpu
-$ pip install ftfy regex tqdm
-```
-
-Downlod pretrained weights from [pan.baidu.com]() and put them under the folder [./assets](./assets)
-
-``` python
 import numpy as np
 import paddle
 import paddle.nn.functional as F
@@ -51,6 +30,3 @@ logits_per_text = logit_scale * text_features @ image_features.t()
 
 probs = F.softmax(logits_per_image).numpy()
 print(probs)  ## prints: [[0.99299157 0.00484808 0.00216033]]
-
-
-```

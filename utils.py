@@ -9,6 +9,21 @@ from simple_tokenizer import SimpleTokenizer
 
 _tokenizer = SimpleTokenizer()
 
+import paddle
+from paddle.vision.transforms import (CenterCrop, Compose, Normalize, Resize,
+                                      ToTensor)
+
+MEAN, STD = (0.48145466, 0.4578275, 0.40821073), (0.26862954, 0.26130258,
+                                                  0.27577711)
+
+transform = Compose([
+    lambda image: image.convert('RGB'),
+    Resize(224, interpolation='bicubic'),
+    CenterCrop(224),
+    ToTensor(),
+    Normalize(mean=MEAN, std=STD), lambda t: t.unsqueeze_(0)
+])
+
 
 def convert_pth_to_paddle(state_dict):
     """
