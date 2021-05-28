@@ -1,4 +1,4 @@
 ftfy
 regex
 tqdm
-paddlepaddle-gpu
+paddlepaddle-gpu~=2.1.0
