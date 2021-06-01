@@ -1,29 +1,43 @@
+import argparse
+
 import numpy as np
 import paddle
 import paddle.nn.functional as F
 from PIL import Image
 
-from utils import (build_model,tokenize, transform)
+from clip import build_model, tokenize, transform
 
+if __name__ == '__main__':
 
-# build model and load the pre-trained weight.
-model = build_model(name='RN50')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--device', type=str, default='gpu:0')
+    parser.add_argument('-m', '--model', type=str, default='VIT')
 
-img = Image.open("CLIP.png")
-image_input = transform(img)
-image_features = model.encode_image(image_input)
+    args = parser.parse_args()
 
-text = tokenize(["a diagram", "a dog", "a cat"])
-text_features = model.encode_text(text)
+    paddle.set_device(args.device)
+    print(f'using device {args.device}')
 
-# normalized features
-image_features = image_features / image_features.norm(axis=-1, keepdim=True)
-text_features = text_features / text_features.norm(axis=-1, keepdim=True)
+    # build modeland load the pre-trained weight.
+    model = build_model(name=args.model)
 
-# cosine similarity as logits
-logit_scale = model.logit_scale.exp()
-logits_per_image = logit_scale * image_features @ text_features.t()
-logits_per_text = logit_scale * text_features @ image_features.t()
+    img = Image.open('CLIP.png')
+    image_input = transform(img)
+    image_features = model.encode_image(image_input)
+    prompt = ['a diagram', 'a dog', 'a cat']
+    text = tokenize(prompt)
+    text_features = model.encode_text(text)
 
-probs = F.softmax(logits_per_image).numpy()
-print(probs)  ## prints: [[0.99299157 0.00484808 0.00216033]]
+    # normalized features
+    image_features = image_features / image_features.norm(axis=-1,
+                                                          keepdim=True)
+    text_features = text_features / text_features.norm(axis=-1, keepdim=True)
+
+    # cosine similarity as logits
+    logit_scale = model.logit_scale.exp()
+    logits_per_image = logit_scale * image_features @ text_features.t()
+    logits_per_text = logit_scale * text_features @ image_features.t()
+
+    probs = F.softmax(logits_per_image).numpy()[0]
+    for i in range(3):
+        print(f'{prompt[i]}:\t{probs[i]:.5}')

@@ -43,7 +43,7 @@ We primarily imagine the model will be used by researchers to better understand 
 
 ### Out-of-Scope Use Cases
 
-**Any** deployed use case of the model - whether commercial or not - is currently out of scope. Non-deployed use cases such as image search in a constrained environment, are also not recommended unless there is thorough in-domain testing of the model with a specific, fixed class taxonomy. This is because our safety assessment demonstrated a high need for task specific testing especially given the variability of CLIP’s performance with different class taxonomies. This makes untested and unconstrained deployment of the model in any use case currently potentially harmful. 
+**Any** deployed use case of the model - whether commercial or not - is currently out of scope. Non-deployed use cases such as image search in a constrained environment, are also not recommended unless there is thorough in-domain testing of the model with a specific, fixed class taxonomy. This is because our safety assessment demonstrated a high need for task specific testing especially given the variability of CLIP’s performance with different class taxonomies. This makes untested and unconstrained deployment of the model in any use case currently potentially harmful.
 
 Certain use cases which would fall under the domain of surveillance and facial recognition are always out-of-scope regardless of performance of the model. This is because the use of artificial intelligence for tasks such as these can be premature currently given the lack of testing norms and checks to ensure its fair use.
 
@@ -68,8 +68,8 @@ Our goal with building this dataset was to test out robustness and generalizabil
 We have evaluated the performance of CLIP on a wide range of benchmarks across a variety of computer vision datasets such as OCR to texture recognition to fine-grained classification. The paper describes model performance on the following datasets:
 
 - Food101
-- CIFAR10   
-- CIFAR100   
+- CIFAR10  
+- CIFAR100  
 - Birdsnap
 - SUN397
 - Stanford Cars
@@ -79,10 +79,10 @@ We have evaluated the performance of CLIP on a wide range of benchmarks across a
 - Oxford-IIIT Pet dataset
 - Caltech101
 - Flowers102
-- MNIST   
-- SVHN 
-- IIIT5K   
-- Hateful Memes   
+- MNIST  
+- SVHN
+- IIIT5K  
+- Hateful Memes  
 - SST-2
 - UCF101
 - Kinetics700

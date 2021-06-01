@@ -38,7 +38,7 @@ text = clip.tokenize(["a diagram", "a dog", "a cat"]).to(device)
 with torch.no_grad():
     image_features = model.encode_image(image)
     text_features = model.encode_text(text)
-    
+
     logits_per_image, logits_per_text = model(image, text)
     probs = logits_per_image.softmax(dim=-1).cpu().numpy()
 
@@ -166,7 +166,7 @@ test = CIFAR100(root, download=True, train=False, transform=preprocess)
 def get_features(dataset):
     all_features = []
     all_labels = []
-    
+
     with torch.no_grad():
         for images, labels in tqdm(DataLoader(dataset, batch_size=100)):
             features = model.encode_image(images.to(device))

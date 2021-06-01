@@ -2,7 +2,7 @@
 
 I have ported the CLIP models and inference code to PaddlePaddle and tested for RN101/ViT/RN50 image encoder and the accompanied transformer text encoder, for whomever is interested. (Note: the RN50 text encoder still under testing, and the others are tested to be  nearly the same as pytorch version. )
 
-CLIP (Contrastive Language-Image Pre-Training) is a neural network trained on a variety of (image, text) pairs. Read the original [README](./README.md.orig) here. Also
+CLIP (Contrastive Language-Image Pre-Training) is a neural network trained on a variety of (image, text) pairs. Read the original [README](./README_orig.md) here. Also
 [[Blog]](https://openai.com/blog/clip/) [[Paper]](https://arxiv.org/abs/2103.00020) [[Model Card]](model-card.md) are usefully.
 
 ## Approach
@@ -61,7 +61,7 @@ print(probs)  ## prints: [[0.99299157 0.00484808 0.00216033]]
 ```
 
 
-## Testing against Pytorch version: 
+## Testing against Pytorch version:
 ``` sh
 python test.py
 ```
@@ -79,4 +79,3 @@ Testing passed for RN50 image encoder,err:5.122274160385132e-09
 Testing passed for text transformer,err: 2.9802322387695312e-08
 Testing passed for ViT image encoder,err: 1.341104507446289e-07
 ```
-

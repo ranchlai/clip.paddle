@@ -8,8 +8,6 @@ from paddle import nn
 from layers import (AttentionPool2d, Bottleneck, MultiHeadAttention,
                     ResidualAttentionBlock)
 
-paddle.set_device('cpu')
-
 
 class ModifiedResNet(nn.Layer):
     """
@@ -110,6 +108,7 @@ class VisualTransformer(nn.Layer):
         super().__init__()
         self.input_resolution = input_resolution
         self.output_dim = output_dim
+        # used patch_size x patch_size, stride patch_size to do linear projection
         self.conv1 = nn.Conv2D(in_channels=3,
                                out_channels=width,
                                kernel_size=patch_size,
