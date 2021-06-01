@@ -12,7 +12,6 @@ __all__ = [
 ]
 
 
-#paddle.set_device('gpu:7')
 def multi_head_attention_forward(x: Tensor,
                                  num_heads: int,
                                  q_proj: Linear,
@@ -21,8 +20,6 @@ def multi_head_attention_forward(x: Tensor,
                                  c_proj: Linear,
                                  attn_mask: Optional[Tensor] = None):
     max_len, batch_size, emb_dim = x.shape
-    # set_trace()
-    #assert emb_dim==self.emb_dim, f"The last dim of x: {emb_dim} must be equal to self.emb_dim: {self.emb_dim}"
     head_dim = emb_dim // num_heads
     scaling = float(head_dim)**-0.5
     q = q_proj(x)  # L, N, E
@@ -34,8 +31,7 @@ def multi_head_attention_forward(x: Tensor,
     q = q.reshape((-1, batch_size * num_heads, head_dim)).transpose((1, 0, 2))
 
     q = q * scaling
-    qk = paddle.bmm(q, k.transpose((0, 2, 1)))  # attn_output_weight in torch
-
+    qk = paddle.bmm(q, k.transpose((0, 2, 1)))
     if attn_mask is not None:
         if attn_mask.ndim == 2:
             attn_mask.unsqueeze_(0)
@@ -114,12 +110,6 @@ class Bottleneck(nn.Layer):
         self.stride = stride
 
         if stride > 1 or inplanes != planes * Bottleneck.expansion:
-            # downsampling layer is prepended with an avgpool, and the subsequent convolution has stride 1
-            #             self.downsample = nn.Sequential(OrderedDict([
-            #                 ("-1", nn.AvgPool2D(stride)),
-            #                 ("0", nn.Conv2D(inplanes, planes * self.expansion, 1, stride=1, bias_attr=False)),
-            #                 ("1", nn.BatchNorm2D(planes * self.expansion))
-            #             ]))
             self.downsample = nn.Sequential(
                 ("-1", nn.AvgPool2D(stride)),
                 ("0",
@@ -153,7 +143,7 @@ class AttentionPool2d(nn.Layer):
                  num_heads: int,
                  output_dim: int = None):
         super().__init__()
-        #self.positional_embedding = paddle.create_parameter(torch.randn(spacial_dim ** 2 + 1, embed_dim) / embed_dim ** 0.5)
+
         self.positional_embedding = paddle.create_parameter(
             (spacial_dim**2 + 1, embed_dim), dtype='float32')
 
@@ -166,10 +156,7 @@ class AttentionPool2d(nn.Layer):
         self.num_heads = num_heads
 
         self.head_dim = embed_dim // num_heads
-        # self.emb_dim = emb_dim
         assert self.head_dim * num_heads == embed_dim, "embed_dim must be divisible by num_heads"
-
-        #elf.scaling = float(self.head_dim) ** -0.5
 
     def forward(self, x):
 
@@ -184,7 +171,6 @@ class AttentionPool2d(nn.Layer):
                                            self.k_proj, self.v_proj,
                                            self.c_proj)
 
-        # print('out[0]?')
         return out[0]
 
 
@@ -206,10 +192,6 @@ class ResidualAttentionBlock(nn.Layer):
         self.attn_mask = attn_mask
 
     def attention(self, x):
-        # self.attn_mask = self.attn_mask.to(dtype=x.dtype, device=x.device) if self.attn_mask is not None else None
-
-        #self.attn_mask = self.attn_mask if self.attn_mask is not None else None
-        #assert self.attn_mask is None
         x = self.attn(x, self.attn_mask)
         assert isinstance(x, paddle.Tensor)  # not tuble here
         return x

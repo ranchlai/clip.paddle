@@ -59,3 +59,24 @@ print(probs)  ## prints: [[0.99299157 0.00484808 0.00216033]]
 
 
 ```
+
+
+## Testing against Pytorch version: 
+``` sh
+python test.py
+```
+Output:
+
+``` Terminal
+Start testing to make sure all models are aligned with official implementation
+======testing RN101======
+Testing passed for text transformer,err: 1.4901161193847656e-08
+Testing passed for RN101 image encoder,err:2.7939677238464355e-09
+======testing RN50======
+Testing passed for text transformer,err: 8.940696716308594e-08
+Testing passed for RN50 image encoder,err:5.122274160385132e-09
+======testing vit======
+Testing passed for text transformer,err: 2.9802322387695312e-08
+Testing passed for ViT image encoder,err: 1.341104507446289e-07
+```
+

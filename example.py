@@ -3,14 +3,11 @@ import paddle
 import paddle.nn.functional as F
 from PIL import Image
 
-from utils import (build_rn50_model, build_rn101_model, build_vit_model,
-                   tokenize, transform)
+from utils import (build_model,tokenize, transform)
+
 
 # build model and load the pre-trained weight.
-model = build_vit_model()
-sd = paddle.load('./assets/ViT-B-32.pdparams')
-model.load_dict(sd)
-model.eval()
+model = build_model(name='RN50')
 
 img = Image.open("CLIP.png")
 image_input = transform(img)

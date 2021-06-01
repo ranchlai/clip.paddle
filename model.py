@@ -117,10 +117,8 @@ class VisualTransformer(nn.Layer):
                                bias_attr=False)
 
         # scale = width ** -0.5
-        #self.class_embedding = paddle.create_parameter(scale * torch.randn(width))
         self.class_embedding = paddle.create_parameter((width, ), 'float32')
 
-        #self.positional_embedding = paddle.create_parameter(scale * torch.randn((input_resolution // patch_size) ** 2 + 1, width))
         self.positional_embedding = paddle.create_parameter(
             ((input_resolution // patch_size)**2 + 1, width), 'float32')
 
@@ -205,7 +203,6 @@ class CLIP(nn.Layer):
 
     def build_attention_mask(self):
         # lazily create causal attention mask, with full attention between the vision tokens
-        # pytorch uses additive attention mask; fill with -inf
         # mask = paddle.empty((self.context_length, self.context_length),dtype='float32')
         # mask.fill_(float("-inf"))
         #mask.triu_(1)  # zero out the lower diagonal
@@ -231,9 +228,6 @@ class CLIP(nn.Layer):
         x = x.transpose((1, 0, 2))  # LND -> NLD
         x = self.ln_final(x)
 
-        # x.shape = [batch_size, n_ctx, transformer.width]
-        # take features from the eot embedding (eot_token is the highest number in each sequence)
-        #x = paddle.matmul(x[torch.arange(x.shape[0]), text.argmax(dim=-1)],self.text_projection)
         idx = text.numpy().argmax(-1)
         idx = list(idx)
         x = [x[i:i + 1, int(j), :] for i, j in enumerate(idx)]

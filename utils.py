@@ -26,8 +26,7 @@ transform = Compose([
 
 
 def convert_pth_to_paddle(state_dict):
-    """
-    covert torch state dict to paddle
+    """ Convert torch state dict to paddle
     """
 
     for key in ["input_resolution", "context_length", "vocab_size"]:
@@ -135,6 +134,24 @@ def tokenize(texts: Union[str, List[str]], context_length: int = 77):
 
     return result
 
+
+URL = {'RN50':'https://bj.bcebos.com/paddleaudio/examples/clip/RN50.pdparams',
+'RN101':'https://bj.bcebos.com/paddleaudio/examples/clip/RN101.pdparams',
+'ViT-B-32':'https://bj.bcebos.com/paddleaudio/examples/clip/ViT-B-32.pdparam'}
+from paddle.utils import download
+
+def build_model(name='RN50'):
+    assert name in ['RN50','RN101','ViT-B-32'], "model name must be one of ['RN50','RN101','ViT-B-32']"
+    name2model = {'RN101':build_rn101_model,
+    'ViT-B-32':build_vit_model,
+    'RN50':build_rn50_model
+    }
+    model = name2model[name]()
+    weight = download.get_weights_path_from_url(URL[name])
+    sd = paddle.load(weight)
+    model.load_dict(sd)
+    model.eval()
+    return model
 
 def build_vit_model():
 
