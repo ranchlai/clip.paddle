@@ -5,8 +5,8 @@ import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle import nn
 
-from layers import (AttentionPool2d, Bottleneck, MultiHeadAttention,
-                    ResidualAttentionBlock)
+from .layers import (AttentionPool2d, Bottleneck, MultiHeadAttention,
+                     ResidualAttentionBlock)
 
 
 class ModifiedResNet(nn.Layer):

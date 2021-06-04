@@ -35,7 +35,7 @@ def multi_head_attention_forward(x: Tensor,
     if attn_mask is not None:
         if attn_mask.ndim == 2:
             attn_mask.unsqueeze_(0)
-        assert str(attn_mask.dtype) == 'VarType.FP32' and attn_mask.ndim == 3
+        #assert str(attn_mask.dtype) == 'VarType.FP32' and attn_mask.ndim == 3
         assert attn_mask.shape[0] == 1 and attn_mask.shape[
             1] == max_len and attn_mask.shape[2] == max_len
         qk += attn_mask

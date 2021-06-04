@@ -10,54 +10,73 @@ CLIP (Contrastive Language-Image Pre-Training) is a neural network trained on a 
 ![CLIP](CLIP.png)
 
 ## Quickstart in PaddlePaddle
-First install PaddlePaddle and other small dependencies,
+Install clip:
 ``` bash
-$ pip install paddlepaddle-gpu
-$ pip install ftfy regex tqdm
+git clone https://github.com/ranchlai/clip.paddle
+cd clip.paddle
+pip install -e .
 ```
 The following example demonstrates zero-shot classification using CLIP.
 
 ``` python
+
+import argparse
+
 import numpy as np
 import paddle
 import paddle.nn.functional as F
 from PIL import Image
 
-from utils import (build_rn50_model, build_rn101_model, build_vit_model,
-                   tokenize, transform)
+from clip import build_model, tokenize, transform
 
-# build model and load the pre-trained weight.
-model = build_vit_model()
-sd = paddle.load('./assets/ViT-B-32.pdparams')
-model.load_dict(sd)
-model.eval()
+if __name__ == '__main__':
 
-img = Image.open("CLIP.png")
-image_input = transform(img)
-image_features = model.encode_image(image_input)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--device', type=str, default='gpu:0')
+    parser.add_argument('-m', '--model', type=str, default='VIT')
 
-text = tokenize(["a diagram", "a dog", "a cat"])
-text_features = model.encode_text(text)
+    args = parser.parse_args()
 
-# normalized features
-image_features = image_features / image_features.norm(axis=-1, keepdim=True)
-text_features = text_features / text_features.norm(axis=-1, keepdim=True)
+    paddle.set_device(args.device)
+    print(f'using device {args.device}')
 
-# cosine similarity as logits
-logit_scale = model.logit_scale.exp()
-logits_per_image = logit_scale * image_features @ text_features.t()
-logits_per_text = logit_scale * text_features @ image_features.t()
+    # build model and load the pre-trained weight.
+    model = build_model(name=args.model)
 
-probs = F.softmax(logits_per_image).numpy()
-print(probs)  ## prints: [[0.99299157 0.00484808 0.00216033]]
+    img = Image.open('CLIP.png')
+    image_input = transform(img)
+    image_features = model.encode_image(image_input)
+    prompt = ['a diagram', 'a dog', 'a cat']
+    text = tokenize(prompt)
+    text_features = model.encode_text(text)
+
+    # normalized features
+    image_features = image_features / image_features.norm(axis=-1,
+                                                          keepdim=True)
+    text_features = text_features / text_features.norm(axis=-1, keepdim=True)
+
+    # cosine similarity as logits
+    logit_scale = model.logit_scale.exp()
+    logits_per_image = logit_scale * image_features @ text_features.t()
+    logits_per_text = logit_scale * text_features @ image_features.t()
+
+    probs = F.softmax(logits_per_image).numpy()[0]
+    for i in range(3):
+        print(f'{prompt[i]}:\t{probs[i]:.5}')
 
 
 ```
 
 
 ## Testing against Pytorch version:
+Run test in cpu:
 ``` sh
-python test.py
+python test.py -d "cpu"
+```
+or
+run test in Cpu:
+``` sh
+python test.py -d "gpu:0"
 ```
 Output:
 

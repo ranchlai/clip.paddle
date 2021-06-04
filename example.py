@@ -12,7 +12,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--device', type=str, default='gpu:0')
     parser.add_argument('-m', '--model', type=str, default='VIT')
-
     args = parser.parse_args()
 
     paddle.set_device(args.device)
